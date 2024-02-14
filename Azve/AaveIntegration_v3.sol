@@ -198,7 +198,7 @@ contract AaveIntegration_v3 {
         for (uint256 i = 0; i < assets.length; i++) {
             IERC20(assets[i]).approve(
                 assets[i],
-                IERC20(assets[i]).balanceOf(assets[i])
+                IERC20(assets[i]).balanceOf(address(this))
             );
         }
 
