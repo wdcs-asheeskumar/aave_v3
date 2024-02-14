@@ -5,7 +5,7 @@ import "https://github.com/aave/aave-v3-core/blob/master/contracts/protocol/pool
 import "https://github.com/aave/aave-v3-core/blob/master/contracts/protocol/pool/L2Pool.sol";
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol";
 import "https://github.com/aave/aave-v3-core/blob/master/contracts/protocol/configuration/PoolAddressesProvider.sol";
-import "https://github.com/aave/aave-v3-core/blob/master/contracts/flashloan/base/FlashLoanSimpleReceiverBase.sol";
+import "https://github.com/aave/aave-v3-core/blob/master/contracts/flashloan/interfaces/IFlashLoanSimpleReceiver.sol";
 import "https://github.com/aave/aave-v3-core/blob/master/contracts/flashloan/interfaces/IFlashLoanReceiver.sol";
 import "https://github.com/soliditylabs/ERC20-Permit/blob/main/contracts/IERC2612Permit.sol";
 
@@ -106,7 +106,7 @@ contract AaveIntegration_v3 {
     ) external {
         bytes memory _params = bytes("");
         require(
-            IERC20(_asset).balanceOf(_asset) > (_amount * 2) / 100,
+            IERC20(_asset).balanceOf(address(this)) > (_amount * 2) / 100,
             "insufficient funds"
         );
         IPool(provider.getPool()).flashLoanSimple(
@@ -141,7 +141,7 @@ contract AaveIntegration_v3 {
         bytes memory _params = bytes("");
         for (uint256 i = 0; i < _amounts.length; i++) {
             require(
-                IERC20(_assets[i]).balanceOf(_assets[i]) >
+                IERC20(_assets[i]).balanceOf(address(this)) >
                     (_amounts[i] * 2) / 100,
                 "isufficient funds"
             );
