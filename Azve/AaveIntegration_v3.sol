@@ -35,8 +35,12 @@ contract AaveIntegration_v3 {
         );
     }
 
-    function withdrawToken(uint256 _amount, address _to) external {
-        IPool(provider.getPool()).withdraw(aave, _amount, _to);
+    function withdrawToken(
+        uint256 _amount,
+        address _to,
+        address _from
+    ) external {
+        IPool(provider.getPool()).withdraw(_from, _amount, _to);
     }
 
     function setReserveAsCollateral() external {
@@ -88,8 +92,8 @@ contract AaveIntegration_v3 {
         uint256 _debtToCover,
         bool _receiveAToken
     ) external {
-        IERC20(_collateral).transferFrom(_user, address(this), _debtToCover);
-        IERC20(_collateral).approve(provider.getPool(), _debtToCover);
+        // IERC20(_collateral).transferFrom(_user, address(this), _debtToCover);
+        IERC20(_debt).approve(provider.getPool(), _debtToCover);
         IPool(provider.getPool()).liquidationCall(
             _collateral,
             _debt,
@@ -233,5 +237,13 @@ contract AaveIntegration_v3 {
             _onBehalfOf,
             _referralCode
         );
+    }
+
+    function reserveData(address _asset)
+        external
+        view
+        returns (DataTypes.ReserveData memory)
+    {
+        IPool(provider.getPool()).getReserveData(_asset);
     }
 }
